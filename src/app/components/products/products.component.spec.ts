@@ -5,13 +5,13 @@ import {
   tick,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { defer, of } from 'rxjs';
 
 import { ProductsComponent } from './products.component';
 import { ProductComponent } from '../product/product.component';
 import { ProductService } from 'src/app/services/product.service';
 import { ValueService } from 'src/app/services/value.service';
 import { generateManyProducts } from 'src/app/models/product.mock';
+import { asyncData, asyncError, mockObservable } from 'src/testing';
 
 describe('Tests for ProductsComponent', () => {
   let component: ProductsComponent;
@@ -64,7 +64,7 @@ describe('Tests for ProductsComponent', () => {
   it('should call spy service on render', () => {
     // Arrange
     const productsMock = generateManyProducts(3);
-    productService.getAll.and.returnValue(of(productsMock));
+    productService.getAll.and.returnValue(mockObservable(productsMock));
 
     // Act
     fixture.detectChanges(); // ngOnInit
@@ -77,7 +77,7 @@ describe('Tests for ProductsComponent', () => {
     it('should return product list from service', () => {
       // Arrange
       const productsMock = generateManyProducts(10); // 10 items
-      productService.getAll.and.returnValue(of(productsMock));
+      productService.getAll.and.returnValue(mockObservable(productsMock));
 
       // Act
       component.getAllProducts(); // +10
@@ -90,9 +90,7 @@ describe('Tests for ProductsComponent', () => {
     it('should change the status "loading" to "success"', fakeAsync(() => {
       // Arrange
       const productsMock = generateManyProducts(10);
-      productService.getAll.and.returnValue(
-        defer(() => Promise.resolve(productsMock))
-      );
+      productService.getAll.and.returnValue(asyncData(productsMock));
 
       // Act
       component.getAllProducts();
@@ -112,9 +110,7 @@ describe('Tests for ProductsComponent', () => {
     it('should change the status "loading" to "error"', fakeAsync(() => {
       // Arrange
       const productsMock = generateManyProducts(10);
-      productService.getAll.and.returnValue(
-        defer(() => Promise.reject('errorTest'))
-      );
+      productService.getAll.and.returnValue(asyncError('errorTest'));
 
       // Act
       component.getAllProducts();
@@ -136,7 +132,7 @@ describe('Tests for ProductsComponent', () => {
     it('should call to the promise', async () => {
       // Arrange
       const productsMock = generateManyProducts(10);
-      productService.getAll.and.returnValue(of(productsMock));
+      productService.getAll.and.returnValue(mockObservable(productsMock));
 
       const mockMsg = 'my mock string';
       valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
@@ -153,7 +149,7 @@ describe('Tests for ProductsComponent', () => {
     it('should show "my mock string" in <p> when btn clicked', fakeAsync(() => {
       // Arrange
       const productsMock = generateManyProducts(10);
-      productService.getAll.and.returnValue(of(productsMock));
+      productService.getAll.and.returnValue(mockObservable(productsMock));
 
       const mockMsg = 'my mock string';
       valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
