@@ -1,0 +1,15 @@
+<section class="container">
+  <h3>Directive Test</h3>
+  <h5>Not highlighted</h5>
+  <h5 highlight>Highlighted (default)</h5>
+  <h5 [highlight]="'yellow'">Highlighted yellow</h5>
+  <input [(ngModel)]="color" [highlight]="color" />
+
+  <hr />
+
+  <h3>Pipe Tests</h3>
+  <h5>Reverse pipe</h5>
+  <p>Some text! ---------> {{ "Some text!" | reverse }}</p>
+  <input [(ngModel)]="text" />
+  <p>{{ text | reverse }}</p>
+</section>
