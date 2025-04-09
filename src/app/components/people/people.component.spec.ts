@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
+import { queryAll, queryAllById } from 'src/testing';
 import { PeopleComponent } from './people.component';
 import { PersonComponent } from '../person/person.component';
 import { Person } from 'src/app/models';
@@ -38,9 +38,7 @@ describe('PeopleComponent', () => {
     component.people = dataForTest;
     fixture.detectChanges();
 
-    const debugElementArray = fixture.debugElement.queryAll(
-      By.css('app-person')
-    );
+    const debugElementArray = queryAllById(fixture, 'app-person');
 
     // Assert
     expect(debugElementArray.length).toEqual(dataForTest.length);
@@ -60,8 +58,7 @@ describe('PeopleComponent', () => {
     fixture.detectChanges();
 
     // Arrange
-    const peopleDebugElement = fixture.debugElement;
-    const buttonDebugArray = peopleDebugElement.queryAll(By.css('.btn-choose'));
+    const buttonDebugArray = queryAllById(fixture, 'btn-choose');
     const thirdButton = buttonDebugArray[2];
 
     // Act
@@ -69,7 +66,7 @@ describe('PeopleComponent', () => {
     fixture.detectChanges();
 
     // Arrange
-    const listItemDebugArray = peopleDebugElement.queryAll(By.css('li'));
+    const listItemDebugArray = queryAll(fixture, 'li');
     const firstListItemDebug = listItemDebugArray[0];
     const firstListItemElement = firstListItemDebug.nativeElement;
 

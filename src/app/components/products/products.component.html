@@ -1,8 +1,10 @@
 <section class="container">
   <h1>Products component</h1>
   <h3>Rta</h3>
-  <button (click)="callPromise()" class="btn-promise">Call promise</button>
-  <p class="rta-promise">{{ rta }}</p>
+  <button (click)="callPromise()" data-testid="btn-promise">
+    Call promise
+  </button>
+  <p data-testid="rta-promise">{{ rta }}</p>
   <div class="my-grid">
     <app-product
       *ngFor="let product of products"

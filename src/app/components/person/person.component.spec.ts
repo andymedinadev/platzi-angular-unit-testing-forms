@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
 
+import { query, queryById } from 'src/testing';
 import { PersonComponent } from './person.component';
 import { Person } from 'src/app/models';
 
@@ -36,8 +36,7 @@ describe('PersonComponent', () => {
 
     const expectedMsg = 'Hello, Tester';
 
-    const personDebugElement: DebugElement = fixture.debugElement;
-    const headingDebug: DebugElement = personDebugElement.query(By.css('h3'));
+    const headingDebug: DebugElement = query(fixture, 'h3');
     const headingElement: HTMLHeadingElement = headingDebug.nativeElement;
 
     // Act
@@ -52,8 +51,7 @@ describe('PersonComponent', () => {
     component.person = new Person('Tester', 'LastTest', 20, 100, 1.7);
     const expectedMsg = 'My height is: 1.7';
 
-    const personDebugElement: DebugElement = fixture.debugElement;
-    const paragraphDebug: DebugElement = personDebugElement.query(By.css('p'));
+    const paragraphDebug: DebugElement = query(fixture, 'p');
     const paragraphElement: HTMLParagraphElement = paragraphDebug.nativeElement;
 
     // Act
@@ -68,10 +66,7 @@ describe('PersonComponent', () => {
     component.person = new Person('Tester', 'LastTest', 20, 120, 1.65);
     const expectedMsg = 'overweight level 3';
 
-    const personDebugElement: DebugElement = fixture.debugElement;
-    const buttonDebug: DebugElement = personDebugElement.query(
-      By.css('.btn-imc')
-    );
+    const buttonDebug: DebugElement = queryById(fixture, 'btn-imc');
     const buttonElement: HTMLButtonElement = buttonDebug.nativeElement;
 
     // Act
@@ -87,10 +82,7 @@ describe('PersonComponent', () => {
     component.person = new Person('Tester', 'LastTest', 20, 120, 1.65);
     const expectedMsg = 'overweight level 3';
 
-    const personDebugElement: DebugElement = fixture.debugElement;
-    const buttonDebug: DebugElement = personDebugElement.query(
-      By.css('.btn-imc')
-    );
+    const buttonDebug: DebugElement = queryById(fixture, 'btn-imc');
     const buttonElement: HTMLButtonElement = buttonDebug.nativeElement;
 
     // Act
@@ -106,8 +98,7 @@ describe('PersonComponent', () => {
     const expectedPerson = new Person('Tester', 'LastTest', 20, 100, 1.7);
     component.person = expectedPerson;
 
-    const personDebugElement = fixture.debugElement;
-    const buttonDebug = personDebugElement.query(By.css('.btn-choose'));
+    const buttonDebug = queryById(fixture, 'btn-choose');
 
     let selectedPerson: Person | undefined;
     component.onSelected.subscribe((person) => (selectedPerson = person));
@@ -161,8 +152,7 @@ describe('PersonComponent from HostComponent', () => {
     // Arrange
     const expectedPersonName = component.personToInput.name;
 
-    const hostComponentDebugElement = fixture.debugElement;
-    const headingDebug = hostComponentDebugElement.query(By.css('h3'));
+    const headingDebug = query(fixture, 'h3');
     const headingElement: HTMLHeadingElement = headingDebug.nativeElement;
 
     // Act
@@ -174,10 +164,7 @@ describe('PersonComponent from HostComponent', () => {
 
   it('should raise selected event when clicked', () => {
     // Arrange
-    const hostComponentDebugElement = fixture.debugElement;
-    const buttonDebugElement = hostComponentDebugElement.query(
-      By.css('.btn-choose')
-    );
+    const buttonDebugElement = queryById(fixture, 'btn-choose');
 
     // Act
     buttonDebugElement.triggerEventHandler('click', null);

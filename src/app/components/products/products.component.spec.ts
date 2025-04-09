@@ -4,14 +4,13 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
 import { ProductsComponent } from './products.component';
 import { ProductComponent } from '../product/product.component';
 import { ProductService } from 'src/app/services/product.service';
 import { ValueService } from 'src/app/services/value.service';
 import { generateManyProducts } from 'src/app/models/product.mock';
-import { asyncData, asyncError, mockObservable } from 'src/testing';
+import { asyncData, asyncError, mockObservable, queryById } from 'src/testing';
 
 describe('Tests for ProductsComponent', () => {
   let component: ProductsComponent;
@@ -154,8 +153,9 @@ describe('Tests for ProductsComponent', () => {
       const mockMsg = 'my mock string';
       valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
 
-      const buttonDebugElement = fixture.debugElement.query(
-        By.css('.btn-promise')
+      const buttonDebugElement = queryById<ProductsComponent>(
+        fixture,
+        'btn-promise'
       );
 
       // Act
@@ -164,8 +164,9 @@ describe('Tests for ProductsComponent', () => {
       fixture.detectChanges();
 
       // Arrange
-      const paragraphDebugElement = fixture.debugElement.query(
-        By.css('.rta-promise')
+      const paragraphDebugElement = queryById<ProductsComponent>(
+        fixture,
+        'rta-promise'
       );
       const paragraphElement: HTMLParagraphElement =
         paragraphDebugElement.nativeElement;

@@ -9,6 +9,7 @@
 
   <h3>Count ({{ people.length }})</h3>
   <app-person
+    data-testid="app-person"
     *ngFor="let person of people"
     [person]="person"
     (onSelected)="choose($event)"

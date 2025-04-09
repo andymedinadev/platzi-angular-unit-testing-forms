@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ReversePipe } from './reverse.pipe';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
+import { ReversePipe } from './reverse.pipe';
+import { query } from 'src/testing';
 
 describe('Tests to ReversePipe', () => {
   it('create an instance', () => {
@@ -58,7 +58,7 @@ describe('Tests to ReversePipe from HostComponent', () => {
 
   it('should h5 be "txet emos"', () => {
     // Arrange
-    const headingDebug = fixture.debugElement.query(By.css('h5'));
+    const headingDebug = query(fixture, 'h5');
     const headingElement = headingDebug.nativeElement as HTMLHeadingElement;
     const text = headingElement.textContent;
 
@@ -68,8 +68,8 @@ describe('Tests to ReversePipe from HostComponent', () => {
 
   it('should apply reverse type on input changes', () => {
     // Arrange
-    const inputDebug = fixture.debugElement.query(By.css('input'));
-    const paragraphDebug = fixture.debugElement.query(By.css('p'));
+    const inputDebug = query(fixture, 'input');
+    const paragraphDebug = query(fixture, 'p');
 
     const inputElement = inputDebug.nativeElement as HTMLInputElement;
     const pElement = paragraphDebug.nativeElement as HTMLParagraphElement;

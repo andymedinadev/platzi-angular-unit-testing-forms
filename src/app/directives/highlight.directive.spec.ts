@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
 import { HighlightDirective } from './highlight.directive';
+import { queryAllByDirective, queryById } from 'src/testing';
 
 @Component({
   template: `
     <h5>Not highlighted</h5>
-    <h5 class="default-title" highlight>Highlighted (default)</h5>
+    <h5 data-testid="default-title" highlight>Highlighted (default)</h5>
     <p [highlight]="'yellow'">some text highlighted</p>
     <p [highlight]="'red'">more text highlighted</p>
-    <input [(ngModel)]="color" [highlight]="color" />
+    <input data-testid="input" [(ngModel)]="color" [highlight]="color" />
   `,
 })
 class HostComponent {
@@ -40,8 +40,9 @@ describe('Tests for HighlightDirective', () => {
   });
 
   it('should have three highlighted elements', () => {
-    const highlightedDebugElements = fixture.debugElement.queryAll(
-      By.directive(HighlightDirective)
+    const highlightedDebugElements = queryAllByDirective(
+      fixture,
+      HighlightDirective
     );
 
     expect(highlightedDebugElements.length).toEqual(4);
@@ -49,8 +50,9 @@ describe('Tests for HighlightDirective', () => {
 
   it('should elements match bgColor', () => {
     // Arrange
-    const highlightedDebugElements = fixture.debugElement.queryAll(
-      By.directive(HighlightDirective)
+    const highlightedDebugElements = queryAllByDirective(
+      fixture,
+      HighlightDirective
     );
 
     const firstHighlightedElement = highlightedDebugElements[0]
@@ -70,9 +72,7 @@ describe('Tests for HighlightDirective', () => {
 
   it('should apply default color to .default-title', () => {
     // Arrange
-    const titleDebugElement = fixture.debugElement.query(
-      By.css('.default-title')
-    );
+    const titleDebugElement = queryById(fixture, 'default-title');
     const titleElement = titleDebugElement.nativeElement as HTMLHeadingElement;
     const backgroundColor = titleElement.style.backgroundColor;
 
@@ -84,7 +84,7 @@ describe('Tests for HighlightDirective', () => {
 
   it('should bind <input> and change bgColor', () => {
     // Arrange
-    const inputDebugElement = fixture.debugElement.query(By.css('input'));
+    const inputDebugElement = queryById(fixture, 'input');
     const inputElement = inputDebugElement.nativeElement as HTMLInputElement;
     const originalBackgroundColor = inputElement.style.backgroundColor;
 
