@@ -7,11 +7,14 @@ export function clickEvent<T>(
   useTestId: boolean = false,
   event: Event | null = null
 ) {
-  const elementDebug = useTestId
-    ? queryById(fixture, selector)
-    : query(fixture, selector);
+  let elementDebug;
 
-  if (!elementDebug) {
+  try {
+    elementDebug = useTestId
+      ? queryById(fixture, selector)
+      : query(fixture, selector);
+  } catch (error) {
+    console.error('original error:', error);
     throw new Error(`Element not found using selector: "${selector}"`);
   }
 
@@ -23,11 +26,14 @@ export function clickElement<T>(
   selector: string,
   useTestId: boolean = false
 ) {
-  const elementDebug = useTestId
-    ? queryById(fixture, selector)
-    : query(fixture, selector);
+  let elementDebug;
 
-  if (!elementDebug) {
+  try {
+    elementDebug = useTestId
+      ? queryById(fixture, selector)
+      : query(fixture, selector);
+  } catch (error) {
+    console.error('original error:', error);
     throw new Error(`Element not found using selector: "${selector}"`);
   }
 
