@@ -13,9 +13,9 @@ import { generateManyProducts } from 'src/app/models/product.mock';
 import {
   asyncData,
   asyncError,
+  clickEvent,
   getText,
   mockObservable,
-  queryById,
 } from 'src/testing';
 
 describe('Tests for ProductsComponent', () => {
@@ -159,13 +159,8 @@ describe('Tests for ProductsComponent', () => {
       const mockMsg = 'my mock string';
       valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
 
-      const buttonDebugElement = queryById<ProductsComponent>(
-        fixture,
-        'btn-promise'
-      );
-
       // Act
-      buttonDebugElement.triggerEventHandler('click', null);
+      clickEvent(fixture, 'btn-promise', true);
       tick();
       fixture.detectChanges();
 

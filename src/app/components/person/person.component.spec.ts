@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, DebugElement } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { getText, query, queryById } from 'src/testing';
+import { clickEvent, getText } from 'src/testing';
 import { PersonComponent } from './person.component';
 import { Person } from 'src/app/models';
 
@@ -75,10 +75,8 @@ describe('PersonComponent', () => {
     component.person = new Person('Tester', 'LastTest', 20, 120, 1.65);
     const expectedMsg = 'overweight level 3';
 
-    const buttonDebug: DebugElement = queryById(fixture, 'btn-imc');
-
     // Act
-    buttonDebug.triggerEventHandler('click', null);
+    clickEvent(fixture, 'btn-imc', true);
     fixture.detectChanges();
 
     // Assert
@@ -91,13 +89,11 @@ describe('PersonComponent', () => {
     const expectedPerson = new Person('Tester', 'LastTest', 20, 100, 1.7);
     component.person = expectedPerson;
 
-    const buttonDebug = queryById(fixture, 'btn-choose');
-
     let selectedPerson: Person | undefined;
     component.onSelected.subscribe((person) => (selectedPerson = person));
 
     //Act
-    buttonDebug.triggerEventHandler('click', null);
+    clickEvent(fixture, 'btn-choose', true);
     fixture.detectChanges();
 
     //Assert
@@ -154,11 +150,8 @@ describe('PersonComponent from HostComponent', () => {
   });
 
   it('should raise selected event when clicked', () => {
-    // Arrange
-    const buttonDebugElement = queryById(fixture, 'btn-choose');
-
     // Act
-    buttonDebugElement.triggerEventHandler('click', null);
+    clickEvent(fixture, 'btn-choose', true);
     fixture.detectChanges();
 
     // Assert
