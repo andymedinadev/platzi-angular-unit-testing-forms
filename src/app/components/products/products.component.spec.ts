@@ -10,7 +10,13 @@ import { ProductComponent } from '../product/product.component';
 import { ProductService } from 'src/app/services/product.service';
 import { ValueService } from 'src/app/services/value.service';
 import { generateManyProducts } from 'src/app/models/product.mock';
-import { asyncData, asyncError, mockObservable, queryById } from 'src/testing';
+import {
+  asyncData,
+  asyncError,
+  getText,
+  mockObservable,
+  queryById,
+} from 'src/testing';
 
 describe('Tests for ProductsComponent', () => {
   let component: ProductsComponent;
@@ -163,16 +169,9 @@ describe('Tests for ProductsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      // Arrange
-      const paragraphDebugElement = queryById<ProductsComponent>(
-        fixture,
-        'rta-promise'
-      );
-      const paragraphElement: HTMLParagraphElement =
-        paragraphDebugElement.nativeElement;
-
       // Assert
-      expect(paragraphElement.textContent).toContain(mockMsg);
+      const textContent = getText(fixture, 'rta-promise');
+      expect(textContent).toContain(mockMsg);
     }));
   });
 });

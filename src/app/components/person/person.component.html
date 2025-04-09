@@ -1,6 +1,6 @@
 <section>
-  <h3>Hello, {{ person.name }}</h3>
-  <p>My height is: {{ person.height }}</p>
+  <h3 data-testid="heading-name">Hello, {{ person.name }}</h3>
+  <p data-testid="p-height">My height is: {{ person.height }}</p>
   <button data-testid="btn-imc" (click)="calcIMC()">IMC: {{ imc }}</button>
   <button data-testid="btn-choose" (click)="onClick()">Choose</button>
 </section>

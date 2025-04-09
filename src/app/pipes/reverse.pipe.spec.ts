@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ReversePipe } from './reverse.pipe';
-import { query } from 'src/testing';
+import { getText, query } from 'src/testing';
 
 describe('Tests to ReversePipe', () => {
   it('create an instance', () => {
@@ -26,9 +26,9 @@ describe('Tests to ReversePipe', () => {
 @Component({
   template: `
     <h1>Test Pipes</h1>
-    <h5>{{ 'some text' | reverse }}</h5>
+    <h5 data-testid="heading-reverse">{{ 'some text' | reverse }}</h5>
     <input [(ngModel)]="defaultText" />
-    <p>{{ defaultText | reverse }}</p>
+    <p data-testid="paragraph-reverse">{{ defaultText | reverse }}</p>
   `,
 })
 class HostComponent {
@@ -58,24 +58,20 @@ describe('Tests to ReversePipe from HostComponent', () => {
 
   it('should h5 be "txet emos"', () => {
     // Arrange
-    const headingDebug = query(fixture, 'h5');
-    const headingElement = headingDebug.nativeElement as HTMLHeadingElement;
-    const text = headingElement.textContent;
+    const textContent = getText(fixture, 'heading-reverse');
 
     // Assert
-    expect(text).toEqual('txet emos');
+    expect(textContent).toEqual('txet emos');
   });
 
   it('should apply reverse type on input changes', () => {
     // Arrange
     const inputDebug = query(fixture, 'input');
-    const paragraphDebug = query(fixture, 'p');
-
     const inputElement = inputDebug.nativeElement as HTMLInputElement;
-    const pElement = paragraphDebug.nativeElement as HTMLParagraphElement;
 
     // Assert
-    expect(pElement.textContent).toEqual('');
+    const originalTextContent = getText(fixture, 'paragraph-reverse');
+    expect(originalTextContent).toEqual('');
 
     // Act
     inputElement.value = 'Testing';
@@ -83,6 +79,7 @@ describe('Tests to ReversePipe from HostComponent', () => {
     fixture.detectChanges();
 
     // Assert
-    expect(pElement.textContent).toEqual('gnitseT');
+    const updatedTextContent = getText(fixture, 'paragraph-reverse');
+    expect(updatedTextContent).toEqual('gnitseT');
   });
 });

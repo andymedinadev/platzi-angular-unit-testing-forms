@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, DebugElement } from '@angular/core';
 
-import { query, queryById } from 'src/testing';
+import { getText, query, queryById } from 'src/testing';
 import { PersonComponent } from './person.component';
 import { Person } from 'src/app/models';
 
@@ -33,17 +33,14 @@ describe('PersonComponent', () => {
   it('should have <h3> element with text: "Hello, {person.name}"', () => {
     // Arrange
     component.person = new Person('Tester', 'LastTest', 20, 100, 1.7);
-
     const expectedMsg = 'Hello, Tester';
-
-    const headingDebug: DebugElement = query(fixture, 'h3');
-    const headingElement: HTMLHeadingElement = headingDebug.nativeElement;
 
     // Act
     fixture.detectChanges();
 
     // Assert
-    expect(headingElement.textContent).toEqual(expectedMsg);
+    const textContent = getText(fixture, 'heading-name');
+    expect(textContent).toEqual(expectedMsg);
   });
 
   it('should have <p> element with text: "My height is: {person.height}"', () => {
@@ -51,14 +48,12 @@ describe('PersonComponent', () => {
     component.person = new Person('Tester', 'LastTest', 20, 100, 1.7);
     const expectedMsg = 'My height is: 1.7';
 
-    const paragraphDebug: DebugElement = query(fixture, 'p');
-    const paragraphElement: HTMLParagraphElement = paragraphDebug.nativeElement;
-
     // Act
     fixture.detectChanges();
 
     // Assert
-    expect(paragraphElement.textContent).toEqual(expectedMsg);
+    const textContent = getText(fixture, 'p-height');
+    expect(textContent).toEqual(expectedMsg);
   });
 
   it('should display a text with IMC when calcIMC is called', () => {
@@ -66,15 +61,13 @@ describe('PersonComponent', () => {
     component.person = new Person('Tester', 'LastTest', 20, 120, 1.65);
     const expectedMsg = 'overweight level 3';
 
-    const buttonDebug: DebugElement = queryById(fixture, 'btn-imc');
-    const buttonElement: HTMLButtonElement = buttonDebug.nativeElement;
-
     // Act
     component.calcIMC();
     fixture.detectChanges();
 
     // Assert
-    expect(buttonElement.textContent).toContain(expectedMsg);
+    const textContent = getText(fixture, 'btn-imc');
+    expect(textContent).toContain(expectedMsg);
   });
 
   it('should display a text with IMC when clicked', () => {
@@ -83,14 +76,14 @@ describe('PersonComponent', () => {
     const expectedMsg = 'overweight level 3';
 
     const buttonDebug: DebugElement = queryById(fixture, 'btn-imc');
-    const buttonElement: HTMLButtonElement = buttonDebug.nativeElement;
 
     // Act
     buttonDebug.triggerEventHandler('click', null);
     fixture.detectChanges();
 
     // Assert
-    expect(buttonElement.textContent).toContain(expectedMsg);
+    const textContent = getText(fixture, 'btn-imc');
+    expect(textContent).toContain(expectedMsg);
   });
 
   it('should raise selected event when clicked', () => {
@@ -152,14 +145,12 @@ describe('PersonComponent from HostComponent', () => {
     // Arrange
     const expectedPersonName = component.personToInput.name;
 
-    const headingDebug = query(fixture, 'h3');
-    const headingElement: HTMLHeadingElement = headingDebug.nativeElement;
-
     // Act
     fixture.detectChanges();
 
     // Assert
-    expect(headingElement.textContent).toContain(expectedPersonName);
+    const textContent = getText(fixture, 'heading-name');
+    expect(textContent).toContain(expectedPersonName);
   });
 
   it('should raise selected event when clicked', () => {
