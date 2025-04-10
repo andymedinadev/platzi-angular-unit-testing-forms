@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { RegisterFormComponent } from './register-form.component';
 import { UsersService } from 'src/app/services/user.service';
-import { getText, query } from 'src/testing';
+import { getText, query, setInputValue } from 'src/testing';
 
 describe('Tests for RegisterFormComponent', () => {
   let component: RegisterFormComponent;
@@ -73,6 +73,17 @@ describe('Tests for RegisterFormComponent', () => {
     // Assert
     expect(component.emailField?.invalid).toBeTruthy();
 
+    const textContent = getText(fixture, 'emailField-notValid');
+    expect(textContent).toContain('Not a valid email');
+  });
+
+  it('should the emailField be invalid from render with helper', () => {
+    // Act
+    setInputValue(fixture, '#email', 'some invalid email');
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.emailField?.invalid).toBeTruthy();
     const textContent = getText(fixture, 'emailField-notValid');
     expect(textContent).toContain('Not a valid email');
   });
