@@ -1,9 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { RegisterFormComponent } from './register-form.component';
 import { UsersService } from 'src/app/services/user.service';
-import { getText, query, setInputValue } from 'src/testing';
+import { generateOneUser } from 'src/app/models/user.mock';
+import {
+  asyncData,
+  asyncError,
+  clickElement,
+  getText,
+  mockObservable,
+  query,
+  setCheckboxValue,
+  setInputValue,
+} from 'src/testing';
 
 describe('Tests for RegisterFormComponent', () => {
   let component: RegisterFormComponent;
@@ -87,4 +102,142 @@ describe('Tests for RegisterFormComponent', () => {
     const textContent = getText(fixture, 'emailField-notValid');
     expect(textContent).toContain('Not a valid email');
   });
+
+  it('should not submit incomplete forms', () => {
+    // Arrange
+    component.form.patchValue({
+      name: 'testName',
+      password: '12345678',
+    });
+
+    // Act
+    component.register(new Event('submit'));
+
+    // Assert
+    expect(component.form.invalid).toBeTruthy();
+    expect(usersServiceSpy.create).not.toHaveBeenCalled();
+  });
+
+  it('should submit form succesfully', () => {
+    // Arrange
+    const mockFormData = {
+      name: 'testName',
+      email: 'test@mail.com',
+      password: '12345678',
+      confirmPassword: '12345678',
+      checkTerms: true,
+    };
+    component.form.patchValue(mockFormData);
+
+    const mockUserFromService = generateOneUser();
+    usersServiceSpy.create.and.returnValue(mockObservable(mockUserFromService));
+
+    // Act
+    component.register(new Event('submit'));
+
+    // Assert
+    expect(component.form.valid).toBeTruthy();
+    expect(usersServiceSpy.create).toHaveBeenCalled();
+  });
+
+  it('should change status when submit', fakeAsync(() => {
+    // Arrange
+    const mockFormData = {
+      name: 'testName',
+      email: 'test@mail.com',
+      password: '12345678',
+      confirmPassword: '12345678',
+      checkTerms: true,
+    };
+    component.form.patchValue(mockFormData);
+
+    const mockUserFromService = generateOneUser();
+    usersServiceSpy.create.and.returnValue(asyncData(mockUserFromService));
+
+    // Act
+    expect(component.form.valid).toBeTruthy();
+    component.register(new Event('submit'));
+    expect(component.status).toEqual('loading');
+
+    tick();
+
+    // Assert
+    expect(usersServiceSpy.create).toHaveBeenCalled();
+    expect(component.status).toEqual('success');
+  }));
+
+  it('should submit form succesfully from rendered UI', fakeAsync(() => {
+    // Arrange
+    const mockFormData = {
+      name: 'testName',
+      email: 'test@mail.com',
+      password: '12345678',
+      confirmPassword: '12345678',
+      checkTerms: true,
+    };
+
+    setInputValue(fixture, 'input#name', mockFormData.name);
+    setInputValue(fixture, 'input#email', mockFormData.email);
+    setInputValue(fixture, 'input#password', mockFormData.password);
+    setInputValue(
+      fixture,
+      'input#confirmPassword',
+      mockFormData.confirmPassword
+    );
+    setCheckboxValue(fixture, 'input#terms', mockFormData.checkTerms);
+
+    const mockUserFromService = generateOneUser();
+    usersServiceSpy.create.and.returnValue(asyncData(mockUserFromService));
+
+    // Act
+    expect(component.form.valid).toBeTruthy();
+    clickElement(fixture, 'btn-submit', true);
+    fixture.detectChanges();
+    expect(component.status).toEqual('loading');
+
+    tick();
+    fixture.detectChanges();
+
+    // Assert
+    expect(usersServiceSpy.create).toHaveBeenCalled();
+    expect(component.status).toEqual('success');
+  }));
+
+  it('should submit form from UI but service fails', fakeAsync(() => {
+    // Arrange
+    const mockFormData = {
+      name: 'testName',
+      email: 'test@mail.com',
+      password: '12345678',
+      confirmPassword: '12345678',
+      checkTerms: true,
+    };
+
+    setInputValue(fixture, 'input#name', mockFormData.name);
+    setInputValue(fixture, 'input#email', mockFormData.email);
+    setInputValue(fixture, 'input#password', mockFormData.password);
+    setInputValue(
+      fixture,
+      'input#confirmPassword',
+      mockFormData.confirmPassword
+    );
+    setCheckboxValue(fixture, 'input#terms', mockFormData.checkTerms);
+
+    usersServiceSpy.create.and.returnValue(
+      asyncError('Error: Service not working')
+    );
+
+    // Act
+    expect(component.form.valid).toBeTruthy();
+    clickElement(fixture, 'btn-submit', true);
+    fixture.detectChanges();
+    expect(component.status).toEqual('loading');
+
+    tick();
+    fixture.detectChanges();
+
+    // Assert
+    expect(usersServiceSpy.create).toHaveBeenCalled();
+    expect(component.status).toEqual('error');
+  }));
 });
