@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { MyValidators } from 'src/app/utils/validators';
 import { UsersService } from 'src/app/services/user.service';
+import { CreateUserDTO } from 'src/app/models';
 
 @Component({
   selector: 'app-register-form',
@@ -30,16 +31,36 @@ export class RegisterFormComponent implements OnInit {
     }
   );
 
+  status: 'loading' | 'success' | 'error' | 'init' = 'init';
+
   constructor(private fb: FormBuilder, private usersService: UsersService) {}
 
   ngOnInit(): void {}
 
+  private buildRegisterDTO(): CreateUserDTO {
+    const { name, email, password } = this.form.value;
+    return { name, email, password, role: 'customer' };
+  }
+
   register(event: Event) {
     event.preventDefault();
     if (this.form.valid) {
-      const value = this.form.value;
-      this.usersService.create(value).subscribe((rta) => {
-        console.log(rta);
+      this.status = 'loading';
+
+      const dto = this.buildRegisterDTO();
+
+      this.usersService.create(dto).subscribe({
+        next: (rta) => {
+          // redirect
+          // alert
+          console.log(rta);
+          this.status = 'success';
+        },
+        error: () => {
+          // redirect
+          // alert
+          this.status = 'error';
+        },
       });
     } else {
       this.form.markAllAsTouched();
@@ -48,10 +69,6 @@ export class RegisterFormComponent implements OnInit {
 
   get nameField() {
     return this.form.get('name');
-  }
-
-  get lastNameField() {
-    return this.form.get('lastName');
   }
 
   get emailField() {
